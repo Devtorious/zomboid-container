@@ -2,6 +2,9 @@
 
 This repository provides a CasaOS-friendly Docker Compose setup for running the x86_64 SteamCMD + Project Zomboid dedicated server on an ARM64 host (for example Orange Pi) using FEX-EMU.
 
+FEX is installed during image build using the official upstream installer script:
+`curl --silent https://raw.githubusercontent.com/FEX-Emu/FEX/main/Scripts/InstallFEX.py | python3`
+
 ## Deploy (CasaOS)
 
 1. Open CasaOS **Custom Install** and paste this repository's `docker-compose.yml`.
@@ -45,4 +48,5 @@ After first boot, edit Project Zomboid server config files under `/data/Zomboid/
 
 - If startup fails early, confirm the service runs with `privileged: true` and `seccomp=unconfined`.
 - Ensure your ARM CPU/board supports FEX requirements.
+- On non-ARM64 Docker hosts, the image still builds but skips FEX installation (runtime is intended for ARM64/CasaOS).
 - Check container logs for `FEXRootFSFetcher` or `steamcmd` failures and restart after fixing.

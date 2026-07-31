@@ -7,13 +7,16 @@ RUN apt-get update \
         bash \
         ca-certificates \
         curl \
+        python3 \
         software-properties-common \
+        sudo \
         tzdata \
-        xz-utils \
-    && add-apt-repository -y ppa:fex-emu/fex \
-    && apt-get update \
-    && (apt-get install -y --no-install-recommends fex-emu-armv8.0 fex-emu-binfmt32 fex-emu-binfmt64 \
-        || apt-get install -y --no-install-recommends fex-emu fex-emu-binfmt32 fex-emu-binfmt64) \
+    && if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
+        curl --silent --show-error --fail https://raw.githubusercontent.com/FEX-Emu/FEX/main/Scripts/InstallFEX.py | python3 || true; \
+        command -v FEXBash >/dev/null 2>&1; \
+       else \
+        echo "Skipping FEX install on non-arm64 architecture: $(dpkg --print-architecture)"; \
+       fi \
     && rm -rf /var/lib/apt/lists/*
 
 COPY docker/start.sh /usr/local/bin/start.sh
