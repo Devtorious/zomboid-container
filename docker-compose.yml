@@ -1,0 +1,28 @@
+services:
+  zomboid:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zomboid-fex
+    privileged: true
+    security_opt:
+      - seccomp=unconfined
+    cap_add:
+      - SYS_ADMIN
+      - SYS_PTRACE
+      - MKNOD
+    environment:
+      TIMEZONE: ${TIMEZONE:-UTC}
+      STEAM_APP_ID: ${STEAM_APP_ID:-380870}
+      STEAM_INSTALL_DIR: ${STEAM_INSTALL_DIR:-/data/steamcmd}
+      ZOMBOID_SERVER_DIR: ${ZOMBOID_SERVER_DIR:-/data/pzserver}
+      UPDATE_ON_START: ${UPDATE_ON_START:-1}
+      ZOMBOID_SERVER_NAME: ${ZOMBOID_SERVER_NAME:-servertest}
+    volumes:
+      - ${PZ_DATA_PATH:-./data}:/data
+    ports:
+      - "16261:16261/udp"
+      - "16262-16272:16262-16272/udp"
+      # Optional RCON mapping (enable RCON in server settings first)
+      # - "27015:27015/tcp"
+    restart: unless-stopped
